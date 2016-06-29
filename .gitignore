@@ -1,0 +1,5 @@
+# OS relevant files
+.DS_Store?
+
+# Ignore temporary files.
+*~
