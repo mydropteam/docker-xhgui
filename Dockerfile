@@ -24,7 +24,7 @@ COPY docker-php-pecl-install /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-php-pecl-install
 RUN docker-php-pecl-install \
   xhprof-0.9.4 \
-  mongo-1.6.12
+  mongodb
 
 RUN chmod +x /usr/local/bin/docker-php-ext-install
 RUN docker-php-ext-install gd mbstring mcrypt zip
@@ -35,10 +35,8 @@ RUN cd /usr/src && mv composer.phar /usr/bin/composer
 
 # Installation of xhgui
 RUN git clone https://github.com/perftools/xhgui.git /usr/share/xhgui &&\
-  chmod -R 0777 /usr/share/xhgui/cache &&\
-  cd /usr/share/xhgui &&\
-  sudo composer install &&\
-  sudo php install.php &&\
+  chmod -R 0777 /usr/share/xhgui/cache
+
 COPY core/xhgui/config.php /usr/share/xhgui/config/
 
 RUN ln -s /usr/share/xhgui/webroot/* /var/www/html
@@ -47,7 +45,9 @@ RUN cp /usr/share/xhgui/webroot/.htaccess /var/www/html/.htaccess
 RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 && \
   chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html
 
-RUN cd /usr/share/xhgui/ && php install.php
+RUN cd /usr/share/xhgui/ &&\
+  composer install &&\
+  php install.php
 
 RUN a2enmod rewrite && service apache2 restart
 
