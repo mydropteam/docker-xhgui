@@ -29,6 +29,10 @@ RUN docker-php-pecl-install \
 RUN chmod +x /usr/local/bin/docker-php-ext-install
 RUN docker-php-ext-install gd mbstring mcrypt zip
 
+# Installation of Composer
+RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
+RUN cd /usr/src && mv composer.phar /usr/bin/composer
+
 # Installation of xhgui
 RUN git clone https://github.com/perftools/xhgui.git /usr/share/xhgui &&\
   chmod -R 0777 /usr/share/xhgui/cache &&\
@@ -36,10 +40,6 @@ RUN git clone https://github.com/perftools/xhgui.git /usr/share/xhgui &&\
   sudo composer install &&\
   sudo php install.php &&\
 COPY core/xhgui/config.php /usr/share/xhgui/config/
-
-# Installation of Composer
-RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
-RUN cd /usr/src && mv composer.phar /usr/bin/composer
 
 RUN ln -s /usr/share/xhgui/webroot/* /var/www/html
 RUN cp /usr/share/xhgui/webroot/.htaccess /var/www/html/.htaccess
