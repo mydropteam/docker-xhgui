@@ -31,9 +31,10 @@ RUN docker-php-ext-install gd mbstring mcrypt zip
 
 # Installation of xhgui
 RUN git clone https://github.com/perftools/xhgui.git /usr/share/xhgui &&\
+  chmod -R 0777 /usr/share/xhgui/cache &&\
   cd /usr/share/xhgui &&\
-  git checkout v0.7.1 &&\
-  chmod -R 0777 /usr/share/xhgui/cache
+  sudo composer install &&\
+  sudo php install.php &&\
 COPY core/xhgui/config.php /usr/share/xhgui/config/
 
 # Installation of Composer
